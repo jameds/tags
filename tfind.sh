@@ -1,5 +1,5 @@
 #!/bin/sh
-cwd="$PWD"
+root="$PWD"
 flag=
 untagged=
 for i; do
@@ -14,7 +14,7 @@ for i; do
 			exit 1
 			;;
 		/a)
-			cwd="$(_get.sh root)"
+			root=""
 			;;
 		/u)
 			untagged=1
@@ -32,7 +32,7 @@ tf() {
 	awk \
 		-v "vflag=$flag" \
 		-v "vprefix=$(_get.sh root)/" \
-		-v "vroot=$(echo "$cwd/" | _file.sh)" \
+		-v "vroot=${root:+$(_file.sh "$root")}" \
 		-f "$TAG_LIB/_asoc.awk" \
 		-f "$TAG_LIB/_tfind_flag.awk" \
 		"$@" \
