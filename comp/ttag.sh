@@ -9,6 +9,7 @@ _ttag_completions() {
 
 	if (( p == 0 )) || (( COMP_POINT < p )); then
 		(( p == 0 )) && f=: || f=
+		local IFS=$'\n'
 		COMPREPLY=($(compgen -f "$cur"))
 		if [ "$cur" == ':' ]; then
 			COMPREPLY+=(:)
