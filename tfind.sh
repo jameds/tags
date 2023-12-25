@@ -16,17 +16,23 @@ for i; do
 			EOT
 			exit 1
 			;;
-		/a)
-			root=""
-			;;
-		/p)
-			prompt=1
-			;;
-		/u)
-			untagged=1
-			;;
-		/v)
-			flag+=v
+		/*)
+			for p in $(echo "${i#/}" | fold -w 1); do
+				case "$p" in
+					a)
+						root=""
+						;;
+					p)
+						prompt=1
+						;;
+					u)
+						untagged=1
+						;;
+					v)
+						flag+=v
+						;;
+				esac
+			done
 			;;
 		*)
 			args+="$i "
