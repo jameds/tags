@@ -1,6 +1,7 @@
 #!/bin/sh
 root="$PWD"
 flag=
+prompt=
 untagged=
 for i; do
 	case "$i" in
@@ -8,6 +9,8 @@ for i; do
 			>&2 cat <<-EOT
 			/a    Search entire database. (Default searches
 			      under this directory only.)
+			/p    Prompt for each directory or all regular
+			      files grouped together.
 			/u    Find untagged files.
 			/v    Print full tags list along with each file.
 			EOT
@@ -15,6 +18,9 @@ for i; do
 			;;
 		/a)
 			root=""
+			;;
+		/p)
+			prompt=1
 			;;
 		/u)
 			untagged=1
@@ -50,9 +56,17 @@ grop() {
 			-f "$TAG_LIB/_tfind_polar.awk"
 	fi
 }
-if [ $untagged ]; then
-	find "$cwd" -mindepth 1 -maxdepth 1 |
-		grep -vFx -f <(grop)
+fn() {
+	if [ $untagged ]; then
+		find "$cwd" -mindepth 1 -maxdepth 1 |
+			grep -vFx -f <(grop)
+	else
+		grop
+	fi
+}
+# FIXME: /p should combine with /v
+if [ $prompt ] && ! echo "$flag" | grep -q v ; then
+	fn | _tfind_select.sh
 else
-	grop
+	fn
 fi
