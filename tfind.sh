@@ -68,7 +68,7 @@ grop() {
 }
 fn() {
 	if [ $untagged ]; then
-		find "$cwd" -mindepth 1 -maxdepth 1 |
+		find -mindepth 1 -maxdepth 1 |
 			grep -vFx -f <(grop)
 	else
 		grop
