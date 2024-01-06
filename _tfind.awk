@@ -9,7 +9,10 @@ f {
 	{
 		if (bverbose)
 			print tags
-		print vprefix $0
+		if (bint)
+			print NR
+		else
+			print vprefix $0
 	}
 }
 

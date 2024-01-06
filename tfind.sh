@@ -9,6 +9,7 @@ for i; do
 			>&2 cat <<-EOT
 			/a    Search entire database. (Default searches
 			      under this directory only.)
+			/i    Print an internal ID instead of a path.
 			/p    Prompt for each directory or all regular
 			      files grouped together.
 			/u    Find untagged files.
@@ -21,6 +22,9 @@ for i; do
 				case "$p" in
 					a)
 						root=""
+						;;
+					i)
+						flag+=i
 						;;
 					p)
 						prompt=1
