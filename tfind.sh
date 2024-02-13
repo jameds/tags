@@ -69,7 +69,7 @@ grop() {
 fn() {
 	if [ $untagged ]; then
 		# needs an absolute path
-		find "$PWD" -mindepth 1 -maxdepth 1 |
+		find -H "$PWD" -mindepth 1 -maxdepth 1 |
 			grep -vFx -f <(grop)
 	else
 		grop
