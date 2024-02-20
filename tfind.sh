@@ -3,6 +3,7 @@ root="$PWD"
 flag=
 prompt=
 untagged=
+ab=
 match_flag() { echo "$flag" | grep -q "$1"; }
 for i; do
 	case "$i" in
@@ -15,8 +16,16 @@ for i; do
 			      files grouped together.
 			/u    Find untagged files.
 			/v    Print full tags list along with each file.
+
+			/N    Print the first N results.
+			/+N   Print the last N results.
+			/N+M  Print N results, starting after the first
+			      M results.
 			EOT
 			exit 1
+			;;
+		/[0-9]* | /+[0-9]*)
+			ab="${i#/}+"
 			;;
 		/*)
 			for p in $(echo "${i#/}" | fold -w 1); do
@@ -67,6 +76,31 @@ grop() {
 			-f "$TAG_LIB/_tfind_polar.awk"
 	fi
 }
+range() {
+	a="${ab%%+*}"
+	b="${ab#*+}"
+	b="${b%+}"
+
+	if match_flag v; then
+		# /v outputs 2 lines per file
+		[ ${a:+x} ] && a=$((a*2))
+		[ ${b:+x} ] && b=$((b*2))
+	fi
+
+	case "${a:+a}${b:+b}" in
+		a)
+			head -n "$a"
+			;;
+		b)
+			tail -n "$b"
+			;;
+		ab)
+			awk -v "a=$a" -v "b=$b" 'NR>b&&NR<=a+b'
+			;;
+		*)
+			cat
+	esac
+}
 fn() {
 	if [ $untagged ]; then
 		# needs an absolute path
@@ -74,7 +108,7 @@ fn() {
 			grep -vFx -f <(grop)
 	else
 		grop
-	fi
+	fi | range
 }
 # FIXME: /p should combine with /v
 if [ $prompt ] && ! match_flag v ; then
