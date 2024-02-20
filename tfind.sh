@@ -3,6 +3,7 @@ root="$PWD"
 flag=
 prompt=
 untagged=
+match_flag() { echo "$flag" | grep -q "$1"; }
 for i; do
 	case "$i" in
 		/)
@@ -76,7 +77,7 @@ fn() {
 	fi
 }
 # FIXME: /p should combine with /v
-if [ $prompt ] && ! echo "$flag" | grep -q v ; then
+if [ $prompt ] && ! match_flag v ; then
 	fn | _tfind_select.sh
 else
 	fn
