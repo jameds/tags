@@ -1,2 +1,2 @@
 #!/bin/sh
-tfind.sh $* | xargs -d '\n' viewnior /dev/null
+tfind.sh $* | xargs -r -d '\n' viewnior /dev/null
