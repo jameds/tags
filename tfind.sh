@@ -116,8 +116,8 @@ fn() {
 	if [ $untagged ]; then
 		# needs an absolute path
 		find -H "$PWD" -mindepth 1 -maxdepth 1 \
-			-printf "$find_format" |
-			awk \ -v "vskip=$skip" \
+			-printf "$find_format" | awk \
+			-v "vskip=$skip" \
 			-f "$TAG_LIB/_tfind_exclude.awk" \
 			- <(grop)
 	else
