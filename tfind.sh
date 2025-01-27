@@ -4,6 +4,8 @@ flag=
 prompt=
 untagged=
 ab=
+find_format='%p\n'
+skip=1
 match_flag() { echo "$flag" | grep -q "$1"; }
 for i; do
 	case "$i" in
@@ -21,6 +23,11 @@ for i; do
 			/+N   Print the last N results.
 			/N+M  Print N results, starting after the first
 			      M results.
+
+			Extra options for /u:
+
+			/t    Print file type (f/d) in first column of
+			      file name.
 			EOT
 			exit 1
 			;;
@@ -38,6 +45,10 @@ for i; do
 						;;
 					p)
 						prompt=1
+						;;
+					t)
+						find_format='%Y%p\n'
+						skip=2
 						;;
 					u)
 						untagged=1
@@ -104,8 +115,11 @@ range() {
 fn() {
 	if [ $untagged ]; then
 		# needs an absolute path
-		find -H "$PWD" -mindepth 1 -maxdepth 1 |
-			grep -vFx -f <(grop)
+		find -H "$PWD" -mindepth 1 -maxdepth 1 \
+			-printf "$find_format" |
+			awk \ -v "vskip=$skip" \
+			-f "$TAG_LIB/_tfind_exclude.awk" \
+			- <(grop)
 	else
 		grop
 	fi | range
