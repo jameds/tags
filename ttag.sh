@@ -3,7 +3,7 @@ set -e
 trap '>&2 echo An error occurred, no files have been changed.' ERR
 
 if [ $# -eq 0 ]; then
-	_tags.sh | sort | uniq -c
+	_tags.sh | sort | uniq -c | _unquote.py
 	exit
 fi
 
